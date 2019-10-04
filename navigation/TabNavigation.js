@@ -1,7 +1,13 @@
 import { createAppContainer } from "react-navigation";
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  MaterialIcons
+} from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
 import Activity from "../screens/Activity";
@@ -13,8 +19,11 @@ const TabNavigator = createBottomTabNavigator({
     screen: Home,
     navigationOptions: {
       tabBarLabel: " ",
-      tabBarIcon: () => {
-        return <Ionicons name={"ios-home"} size={35} />;
+      tabBarIcon: ({ focused }) => {
+        if (focused) {
+          return <Entypo name="home" size={35} />;
+        }
+        return <AntDesign name="home" size={35} />;
       }
     }
   },
@@ -22,8 +31,11 @@ const TabNavigator = createBottomTabNavigator({
     screen: Search,
     navigationOptions: {
       tabBarLabel: " ",
-      tabBarIcon: () => {
-        return <Ionicons name={"ios-search"} size={35} />;
+      tabBarIcon: ({ focused }) => {
+        if (!focused) {
+          return <Ionicons name={"ios-search"} size={35} />;
+        }
+        return <FontAwesome name={"search"} size={35} />;
       }
     }
   },
@@ -59,8 +71,11 @@ const TabNavigator = createBottomTabNavigator({
     screen: Profile,
     navigationOptions: {
       tabBarLabel: " ",
-      tabBarIcon: () => {
-        return <Ionicons name={"ios-person"} size={35} />;
+      tabBarIcon: ({ focused }) => {
+        if (focused) {
+          return <MaterialIcons name={"person"} size={35} />;
+        }
+        return <MaterialIcons name={"person-outline"} size={35} />;
       }
     }
   }
