@@ -5,7 +5,7 @@ import { View, Text } from "react-native";
 import { Button } from "react-native-elements";
 import { styles } from "../styles";
 import { add } from "../actions";
-import GeneralStatusBar from "./GeneralStatusBar";
+import { initialize } from "../config/config";
 
 class Home extends Component {
   render() {
@@ -16,13 +16,14 @@ class Home extends Component {
         <Text>Count: {counter}</Text>
         <Button type="clear" title="ADD" onPress={() => add(false)} />
         <Button type="clear" title="SUB" onPress={() => add(true)} />
+        <Button type="clear" title="Logout" onPress={() => initialize.auth().signOut()} />
       </View>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return { counter: state };
+const mapStateToProps = ({ counter }) => {
+  return { counter };
 };
 
 const mapDispatchToProps = dispatch => {
