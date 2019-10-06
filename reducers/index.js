@@ -26,9 +26,21 @@ const user = (state = {}, { payload, type }) => {
   }
 };
 
+const post = (state = { feed: [] }, { payload, type }) => {
+  switch (type) {
+    case "UPDATE_DESCRIPTION":
+      return { ...state, description: payload };
+    case "GET_POSTS":
+      return { ...state, feed: payload };
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   counter,
-  user
+  user,
+  post
 });
 
 export default rootReducer;

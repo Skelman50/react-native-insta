@@ -1,32 +1,40 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { View, Text } from "react-native";
-import { Button } from "react-native-elements";
+import { View, Text, Image } from "react-native";
 import { styles } from "../styles";
-import { add } from "../actions";
-import { initialize } from "../config/config";
+import { getPosts } from "../actions/post";
 
 class Home extends Component {
+  componentDidMount = () => {
+    const { getPosts, post } = this.props;
+    getPosts();
+  };
   render() {
-    const { counter, add } = this.props;
+    const {
+      post: { feed }
+    } = this.props;
+    console.log("ololo", feed);
     return (
       <View style={styles.container}>
-        <Text>Home</Text>
-        <Text>Count: {counter}</Text>
-        <Button type="clear" title="ADD" onPress={() => add(false)} />
-        <Button type="clear" title="SUB" onPress={() => add(true)} />
+        {feed.map((f, i) => (
+          <Image
+            key={i}
+            style={styles.postPhoto}
+            source={{ uri: f.postPhoto }}
+          />
+        ))}
       </View>
     );
   }
 }
 
-const mapStateToProps = ({ counter }) => {
-  return { counter };
+const mapStateToProps = ({ post }) => {
+  return { post };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ add }, dispatch);
+  return bindActionCreators({ getPosts }, dispatch);
 };
 
 export default connect(

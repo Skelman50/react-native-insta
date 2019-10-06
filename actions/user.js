@@ -73,8 +73,28 @@ export const facebookLogin = () => {
           token
         );
         const response = await firebase.auth().signInWithCredential(credential);
-        console.log(response);
-        dispatch(getUser(response.user.uid));
+        const user = await db
+          .collection("users")
+          .doc(response.user.uid)
+          .get();
+        console.log(user.exists);
+        if (!user.exists) {
+          const dbUser = {
+            email: response.user.email,
+            username: response.user.displayName,
+            bio: "",
+            photo: response.user.photoURL,
+            token: null,
+            uid: response.user.uid
+          };
+          await db
+            .collection("users")
+            .doc(response.user.uid)
+            .set(dbUser);
+          dispatch({ type: "LOGIN", payload: dbUser });
+        } else {
+          dispatch(getUser(response.user.uid));
+        }
       }
     } catch (error) {
       console.log(error);
