@@ -16,7 +16,6 @@ class Home extends Component {
         <Text>Count: {counter}</Text>
         <Button type="clear" title="ADD" onPress={() => add(false)} />
         <Button type="clear" title="SUB" onPress={() => add(true)} />
-        <Button type="clear" title="Logout" onPress={() => initialize.auth().signOut()} />
       </View>
     );
   }

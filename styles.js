@@ -25,5 +25,15 @@ export const styles = StyleSheet.create({
     borderColor: "#d3d3d3",
     borderBottomWidth: 1,
     textAlign: "center"
+  },
+  facebookButton: {
+    backgroundColor: "#3b5998",
+    marginTop: 10,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderColor: "#3b5998",
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 200
   }
 });

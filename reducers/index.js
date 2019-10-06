@@ -21,8 +21,6 @@ const user = (state = {}, { payload, type }) => {
       return { ...state, bio: payload };
     case "LOGIN":
       return payload;
-    case "SIGNUP":
-      return payload;
     default:
       return state;
   }

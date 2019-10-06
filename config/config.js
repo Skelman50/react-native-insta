@@ -1,4 +1,5 @@
 import firebase from "firebase";
+require("firebase/firestore");
 import { env } from "../env";
 
 const {
@@ -24,3 +25,7 @@ const firebaseConfig = {
 };
 
 export const initialize = firebase.initializeApp(firebaseConfig);
+
+const db = initialize.firestore();
+
+export { db };

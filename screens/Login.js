@@ -8,36 +8,38 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { styles } from "../styles";
-import { updateEmail, updatePassword, login } from "../actions/user";
+import {
+  updateEmail,
+  updatePassword,
+  login,
+  getUser,
+  facebookLogin
+} from "../actions/user";
 import { initialize } from "../config/config";
 
 class Login extends Component {
   componentDidMount = () => {
     initialize.auth().onAuthStateChanged(user => {
       const {
-        navigation: { navigate }
+        navigation: { navigate },
+        getUser
       } = this.props;
       if (user) {
-        navigate("Home");
+        getUser(user.uid);
+        if (this.props.user) {
+          navigate("Home");
+        }
       }
     });
   };
-  // login = () => {
-  //   const {
-  //     login,
-  //     navigation: { navigate }
-  //   } = this.props;
-  //   login();
-  //   navigate("Home");
-  // };
   render() {
     const {
-      email,
-      password,
+      user: { email, password },
       updateEmail,
       login,
       updatePassword,
-      navigation: { navigate }
+      navigation: { navigate },
+      facebookLogin
     } = this.props;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
@@ -58,6 +60,9 @@ class Login extends Component {
         <TouchableOpacity style={styles.button} onPress={login}>
           <Text>Login</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.facebookButton} onPress={facebookLogin}>
+          <Text>Login with facebook</Text>
+        </TouchableOpacity>
         <Text style={{ marginTop: 10 }}>OR</Text>
         <TouchableOpacity
           style={styles.button}
@@ -70,12 +75,15 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ user: { email, password } }) => {
-  return { email, password };
+const mapStateToProps = ({ user }) => {
+  return { user };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ updateEmail, updatePassword, login }, dispatch);
+  return bindActionCreators(
+    { updateEmail, updatePassword, login, getUser, facebookLogin },
+    dispatch
+  );
 };
 
 export default connect(
