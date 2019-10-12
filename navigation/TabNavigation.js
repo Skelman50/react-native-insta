@@ -8,15 +8,16 @@ import {
   FontAwesome,
   MaterialIcons
 } from "@expo/vector-icons";
-import Home from "../screens/Home";
-import Search from "../screens/Search";
-import Activity from "../screens/Activity";
-import Upload from "../screens/Upload";
-import Profile from "../screens/Profile";
-
+import {
+  HomeNavigator,
+  SearchNavigator,
+  UploadNavigator,
+  ProfileNavigator,
+  ActivityNavigator
+} from "../navigation/StackNavigator";
 const TabNavigator = createBottomTabNavigator({
   Home: {
-    screen: Home,
+    screen: HomeNavigator,
     navigationOptions: {
       tabBarLabel: " ",
       tabBarIcon: ({ focused }) => {
@@ -28,7 +29,7 @@ const TabNavigator = createBottomTabNavigator({
     }
   },
   Search: {
-    screen: Search,
+    screen: SearchNavigator,
     navigationOptions: {
       tabBarLabel: " ",
       tabBarIcon: ({ focused }) => {
@@ -40,7 +41,7 @@ const TabNavigator = createBottomTabNavigator({
     }
   },
   Upload: {
-    screen: Upload,
+    screen: UploadNavigator,
     navigationOptions: {
       tabBarLabel: " ",
       tabBarIcon: ({ focused }) => {
@@ -54,7 +55,7 @@ const TabNavigator = createBottomTabNavigator({
     }
   },
   Activity: {
-    screen: Activity,
+    screen: ActivityNavigator,
     navigationOptions: {
       tabBarLabel: " ",
       tabBarIcon: ({ focused }) => {
@@ -68,7 +69,7 @@ const TabNavigator = createBottomTabNavigator({
     }
   },
   Profile: {
-    screen: Profile,
+    screen: ProfileNavigator,
     navigationOptions: {
       tabBarLabel: " ",
       tabBarIcon: ({ focused }) => {

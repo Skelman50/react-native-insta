@@ -1,14 +1,5 @@
 import { combineReducers } from "redux";
 
-const counter = (state = 0, { payload, type }) => {
-  switch (type) {
-    case "INCREMENT":
-      return !payload ? state + 1 : state - 1;
-    default:
-      return state;
-  }
-};
-
 const user = (state = {}, { payload, type }) => {
   switch (type) {
     case "UPDATE_EMAIL":
@@ -26,19 +17,22 @@ const user = (state = {}, { payload, type }) => {
   }
 };
 
-const post = (state = { feed: [] }, { payload, type }) => {
+const post = (state = { feed: [], description: "" }, { payload, type }) => {
   switch (type) {
     case "UPDATE_DESCRIPTION":
       return { ...state, description: payload };
     case "GET_POSTS":
       return { ...state, feed: payload };
+    case "UPDATE_PHOTO":
+      return { ...state, photo: payload };
+    case "UPDATE_LOCATION":
+      return { ...state, location: payload };
     default:
       return state;
   }
 };
 
 const rootReducer = combineReducers({
-  counter,
   user,
   post
 });

@@ -1,36 +1,10 @@
 import { initialize, db } from "../config/config";
-import firebase from "firebase";
+import uuid from "uuid";
 
 export const updateDescription = payload => {
   return {
     type: "UPDATE_DESCRIPTION",
     payload
-  };
-};
-
-export const uploadPost = uid => {
-  return async (dispatch, getState) => {
-    try {
-      const {
-        post: { description },
-        user: { uid, photo, username }
-      } = getState();
-      const upload = {
-        postPhoto:
-          "https://firebasestorage.googleapis.com/v0/b/instaclone-8046d.appspot.com/o/angular.jpeg?alt=media&token=17daf32a-850b-4e62-a315-044c7981996b",
-        postDescription: description,
-        uid,
-        photo,
-        username
-      };
-      const ref = await db.collection("posts").doc();
-      upload.id = ref.id;
-      ref.set(upload);
-      //   dispatch({ type: "LOGIN", payload: user.data() });
-    } catch (error) {
-      alert(error);
-      return;
-    }
   };
 };
 
@@ -44,6 +18,37 @@ export const getPosts = () => {
     } catch (error) {
       alert(error);
       return;
+    }
+  };
+};
+
+export const updatePhoto = input => {
+  return { type: "UPDATE_PHOTO", payload: input };
+};
+
+export const updateLocation = input => {
+  return { type: "UPDATE_LOCATION", payload: input };
+};
+
+export const uploadPost = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { post, user } = getState();
+      const id = uuid.v4();
+      const upload = {
+        id: id,
+        postPhoto: post.photo,
+        postDescription: post.description,
+        uid: user.uid,
+        photo: user.photo,
+        username: user.username,
+        place: post.location.name
+      };
+      db.collection("posts")
+        .doc(id)
+        .set(upload);
+    } catch (e) {
+      alert(e);
     }
   };
 };

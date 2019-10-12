@@ -1,5 +1,4 @@
 import { createAppContainer, createStackNavigator } from "react-navigation";
-import React from "react";
 import Login from "../screens/Login";
 import Signup from "../screens/Signup";
 
@@ -13,7 +12,7 @@ const AuthNavigator = createStackNavigator({
   Signup: {
     screen: Signup,
     navigationOptions: {
-      header: null
+      title: "Signup"
     }
   }
 });

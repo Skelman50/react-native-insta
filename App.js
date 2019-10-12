@@ -13,13 +13,15 @@ console.ignoredYellowBox = ["Setting a timer"];
 const middleware = applyMiddleware(thunk);
 const store = createStore(reducer, middleware);
 
-export default class App extends Component {
+class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <GeneralStatusBar />
+        <GeneralStatusBar hidden={false} />
         <SwitchNavigator />
       </Provider>
     );
   }
 }
+
+export default App;
