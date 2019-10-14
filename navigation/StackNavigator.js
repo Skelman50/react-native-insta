@@ -10,6 +10,11 @@ import Profile from "../screens/Profile";
 import { styles } from "../styles";
 import Camera from "../screens/Camera";
 import Map from "../screens/Map";
+import Signup from "../screens/Signup";
+import Comment from "../screens/Comment";
+import HeaderTitleText from "./helpers/HeaderTitle";
+import HeaderLeftBack from "./helpers/HraderLeftBack";
+import { headerTitleStyle } from "./helpers/headerTitleStyle";
 
 const headerTitle = (
   <View style={styles.containerTitle}>
@@ -56,26 +61,17 @@ export const HomeNavigator = createAppContainer(
     Map: {
       screen: Map,
       navigationOptions: ({ navigation }) => ({
-        headerTitle: (
-          <View style={styles.containerTitle}>
-            <Text>Map View</Text>
-          </View>
-        ),
-        headerTitleStyle: {
-          alignSelf: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          flex: 1
-        },
-        headerLeft: (
-          <TouchableOpacity
-            style={{ marginLeft: 10 }}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name={"ios-arrow-back"} size={30} />
-          </TouchableOpacity>
-        ),
-        headerRight: <View></View>
+        headerTitle: <HeaderTitleText text={"Map View"} />,
+        headerLeft: <HeaderLeftBack navigation={navigation} />,
+        headerRight: <View />
+      })
+    },
+    Comment: {
+      screen: Comment,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: <HeaderTitleText text={"Comments"} />,
+        headerLeft: <HeaderLeftBack navigation={navigation} />,
+        headerRight: <View />
       })
     }
   })
@@ -98,12 +94,7 @@ export const SearchNavigator = createAppContainer(
       screen: Search,
       navigationOptions: {
         title: "Search",
-        headerTitleStyle: {
-          alignSelf: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          flex: 1
-        }
+        headerTitleStyle
       }
     }
   })
@@ -111,16 +102,11 @@ export const SearchNavigator = createAppContainer(
 
 export const UploadNavigator = createAppContainer(
   createStackNavigator({
-    Search: {
+    Upload: {
       screen: Upload,
       navigationOptions: {
         title: "Upload",
-        headerTitleStyle: {
-          alignSelf: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          flex: 1
-        }
+        headerTitleStyle
       }
     }
   })
@@ -128,16 +114,11 @@ export const UploadNavigator = createAppContainer(
 
 export const ActivityNavigator = createAppContainer(
   createStackNavigator({
-    Search: {
+    Activity: {
       screen: Activity,
       navigationOptions: {
         title: "Activity",
-        headerTitleStyle: {
-          alignSelf: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          flex: 1
-        }
+        headerTitleStyle
       }
     }
   })
@@ -145,17 +126,20 @@ export const ActivityNavigator = createAppContainer(
 
 export const ProfileNavigator = createAppContainer(
   createStackNavigator({
-    Search: {
+    Profile: {
       screen: Profile,
       navigationOptions: {
         title: "Profile",
-        headerTitleStyle: {
-          alignSelf: "center",
-          textAlign: "center",
-          justifyContent: "center",
-          flex: 1
-        }
+        headerTitleStyle
       }
+    },
+    Edit: {
+      screen: Signup,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: <HeaderTitleText text={"Edit"} />,
+        headerLeft: <HeaderLeftBack navigation={navigation} />,
+        headerRight: <View />
+      })
     }
   })
 );

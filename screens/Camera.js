@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -13,7 +13,7 @@ import { updatePhoto } from "../actions/post";
 
 class CameraScreen extends Component {
   state = {
-    type: Camera.Constants.Type.back,
+    isBack: true,
     hidden: true
   };
   snapPhoto = async () => {
@@ -35,8 +35,14 @@ class CameraScreen extends Component {
     }
   };
 
+  reverseCamera = () => {
+    this.setState({
+      isBack: !this.state.isBack
+    });
+  };
+
   render() {
-    const { type, hidden } = this.state;
+    const { isBack, hidden } = this.state;
     return (
       <React.Fragment>
         <GeneralStatusBar hidden={hidden} />
@@ -45,14 +51,32 @@ class CameraScreen extends Component {
           ref={ref => {
             this.camera = ref;
           }}
-          type={type}
+          type={
+            isBack ? Camera.Constants.Type.back : Camera.Constants.Type.front
+          }
         >
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView
+            style={{
+              flex: 1,
+              justifyContent: "space-between",
+              flexDirection: "row"
+            }}
+          >
             <TouchableOpacity
               style={{ paddingLeft: 30 }}
               onPress={() => this.props.navigation.goBack()}
             >
               <Ionicons color={"white"} name={"ios-arrow-back"} size={50} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ paddingRight: 30 }}
+              onPress={this.reverseCamera}
+            >
+              <MaterialCommunityIcons
+                color={"white"}
+                name={"rotate-3d"}
+                size={50}
+              />
             </TouchableOpacity>
           </SafeAreaView>
           <TouchableOpacity

@@ -10,6 +10,8 @@ const user = (state = {}, { payload, type }) => {
       return { ...state, username: payload };
     case "UPDATE_BIO":
       return { ...state, bio: payload };
+    case "UPDATE_USER_PHOTO":
+      return { ...state, photo: payload };
     case "LOGIN":
       return payload;
     default:
@@ -27,6 +29,17 @@ const post = (state = { feed: [], description: "" }, { payload, type }) => {
       return { ...state, photo: payload };
     case "UPDATE_LOCATION":
       return { ...state, location: payload };
+    case "GET_COMMENTS":
+      return { ...state, comments: payload };
+    default:
+      return state;
+  }
+};
+
+const profile = (state = {}, action) => {
+  switch (action.type) {
+    case "GET_PROFILE":
+      return action.payload;
     default:
       return state;
   }
@@ -34,7 +47,8 @@ const post = (state = { feed: [], description: "" }, { payload, type }) => {
 
 const rootReducer = combineReducers({
   user,
-  post
+  post,
+  profile
 });
 
 export default rootReducer;

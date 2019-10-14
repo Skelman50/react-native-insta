@@ -22,6 +22,9 @@ export const updateUsername = payload => {
     payload
   };
 };
+export const updatePhoto = photo => {
+  return { type: "UPDATE_USER_PHOTO", payload: photo };
+};
 
 export const updateBio = payload => {
   return {
@@ -132,6 +135,23 @@ export const signup = () => {
     } catch (error) {
       console.log(error);
       alert(error);
+    }
+  };
+};
+
+export const updateUser = () => {
+  return async (dispatch, getState) => {
+    const { uid, username, bio, photo } = getState().user;
+    try {
+      db.collection("users")
+        .doc(uid)
+        .update({
+          username: username,
+          bio: bio,
+          photo: photo
+        });
+    } catch (e) {
+      alert(e);
     }
   };
 };

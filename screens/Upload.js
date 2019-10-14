@@ -1,17 +1,29 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ImageEditor
+} from "react-native";
 import * as Permissions from "expo-permissions";
+import { NavigationEvents } from "react-navigation";
+import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { styles } from "../styles";
 import {
   updateDescription,
   uploadPost,
   updateLocation,
-  getPosts
+  getPosts,
+  updatePhoto
 } from "../actions/post";
 import ModalLocation from "./helpers/ModalLocation";
+import { uploadPhoto } from "../actions/upload";
 const GOOGLE_API =
   "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
@@ -23,9 +35,10 @@ class Upload extends Component {
       { id: "2", name: "Zmiiv", vicinity: "Kharkivska" }
     ]
   };
-  post = () => {
+  post = async () => {
+    const url = await this.props.uploadPhoto({ uri: this.props.post.photo });
+    this.props.updatePhoto(url);
     this.props.uploadPost();
-    this.props.getPosts();
     this.props.navigation.navigate("Home");
   };
   setLocation = location => {
@@ -38,6 +51,40 @@ class Upload extends Component {
     };
     this.setState({ showModal: false });
     this.props.updateLocation(place);
+  };
+
+  onWillFocus = () => {
+    if (!this.props.post.photo) {
+      this.openLibrary();
+    }
+  };
+
+  openLibrary = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === "granted") {
+      const image = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true
+      });
+      if (!image.cancelled) {
+        let resizedUri = await new Promise((resolve, reject) => {
+          ImageEditor.cropImage(
+            image.uri,
+            {
+              offset: { x: 0, y: 0 },
+              size: {
+                width: image.width,
+                height: image.height
+              },
+              displaySize: { width: styles.postPhoto.width, height: 300 },
+              resizeMode: "contain"
+            },
+            uri => resolve(uri),
+            () => reject()
+          );
+        });
+        this.props.updatePhoto(resizedUri);
+      }
+    }
   };
 
   // getLocations = async () => {
@@ -63,17 +110,22 @@ class Upload extends Component {
     const { showModal, locations } = this.state;
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={this.onWillFocus} />
         <ModalLocation
           showModal={showModal}
           locations={locations}
           setLocation={this.setLocation}
         />
-        <Image
-          style={styles.postPhoto}
-          source={{
-            uri: photo
-          }}
-        />
+        <TouchableOpacity onPress={this.openLibrary}>
+          <Image
+            style={styles.postPhoto}
+            resizeMode={"contain"}
+            source={{
+              uri: photo
+            }}
+          />
+        </TouchableOpacity>
+
         <TextInput
           value={description}
           onChangeText={input => updateDescription(input)}
@@ -104,7 +156,14 @@ const mapStateToProps = ({ post, user }) => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { updateDescription, uploadPost, updateLocation, getPosts },
+    {
+      updateDescription,
+      uploadPost,
+      updateLocation,
+      getPosts,
+      uploadPhoto,
+      updatePhoto
+    },
     dispatch
   );
 };

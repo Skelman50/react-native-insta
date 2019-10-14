@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 500
+  },
+  containerComments: {
+    flex: 1,
+    backgroundColor: "#fff"
   },
   containerTitle: {
     flex: 1,
@@ -44,7 +48,7 @@ export const styles = StyleSheet.create({
   },
   postPhoto: {
     width,
-    height: 250
+    height: 300
   },
   roundImage: {
     width: 40,
@@ -54,6 +58,16 @@ export const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row"
+  },
+  input: {
+    width: width * 0.9,
+    margin: 15,
+    padding: 15,
+    alignSelf: "center",
+    borderColor: "#d3d3d3",
+    borderWidth: 1,
+    borderRadius: 50,
+    fontSize: 16
   },
   center: {
     alignItems: "center",
@@ -66,5 +80,24 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: "#fff",
     marginBottom: 50
+  },
+  bold: {
+    fontWeight: "bold"
+  },
+  left: {
+    alignItems: "flex-start"
+  },
+  buttonSmall: {
+    margin: 10,
+    marginBottom: 0,
+    padding: 5,
+    alignItems: "center",
+    borderColor: "#d3d3d3",
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 125
+  },
+  space: {
+    justifyContent: "space-between"
   }
 });
