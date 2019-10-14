@@ -47,11 +47,24 @@ class Activity extends Component {
               <View style={[styles.row, styles.center]}>
                 <Image
                   style={styles.roundImage}
-                  source={{ uri: item.likerPhoto }}
+                  source={{
+                    uri:
+                      item.type === "COMMENT"
+                        ? item.commenterPhoto
+                        : item.likerPhoto
+                  }}
                 />
                 <View>
-                  <Text>{item.likerName}</Text>
-                  <Text>Liked Your Photo</Text>
+                  <Text>
+                    {item.type === "COMMENT"
+                      ? item.commenterName
+                      : item.likerName}
+                  </Text>
+                  <Text>
+                    {item.type === "COMMENT"
+                      ? "Commented Your Photo"
+                      : "Liked Your Photo"}
+                  </Text>
                   <Text>{item.date}</Text>
                 </View>
                 <Image
