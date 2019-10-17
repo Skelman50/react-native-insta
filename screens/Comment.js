@@ -1,14 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import { bindActionCreators } from "redux";
-import {
-  Text,
-  View,
-  TextInput,
-  KeyboardAvoidingView,
-  FlatList,
-  Image
-} from "react-native";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import { Text, View, TextInput, FlatList, Image } from "react-native";
 import { addComment, getComments } from "../actions/post";
 import { styles } from "../styles";
 
@@ -18,8 +13,14 @@ class Comment extends React.Component {
   };
 
   componentDidMount = () => {
-    const { params } = this.props.navigation.state;
-    this.props.getComments(params);
+    this._navListener = this.props.navigation.addListener("didFocus", () => {
+      const { params } = this.props.navigation.state;
+      this.props.getComments(params);
+    });
+  };
+
+  componentWillUnmount = () => {
+    this._navListener.remove();
   };
 
   postComment = () => {
@@ -30,12 +31,7 @@ class Comment extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView
-        enabled
-        behavior="padding"
-        keyboardVerticalOffset={125}
-        style={styles.containerComments}
-      >
+      <View style={styles.containerComments}>
         <FlatList
           keyExtractor={item => JSON.stringify(item.date)}
           data={this.props.post.comments}
@@ -44,11 +40,18 @@ class Comment extends React.Component {
               <View style={[styles.row, styles.space]}>
                 <Image
                   style={styles.roundImage}
-                  source={{ uri: item.commenterPhoto }}
+                  source={{
+                    uri: item.commenterPhoto
+                      ? item.commenterPhoto
+                      : "https://wingslax.com/wp-content/uploads/2017/12/no-image-available.png"
+                  }}
                 />
                 <View style={[styles.containerComments, styles.left]}>
-                  <Text>{item.commenterName}</Text>
-                  <Text>{item.comment}</Text>
+                  <Text style={styles.bold}>{item.commenterName}</Text>
+                  <Text style={styles.gray}>{item.comment}</Text>
+                  <Text style={[styles.gray, styles.small]}>
+                    {moment(item.date).format("ll")}
+                  </Text>
                 </View>
               </View>
             );
@@ -62,7 +65,8 @@ class Comment extends React.Component {
           placeholder="Add Comment"
           onSubmitEditing={this.postComment}
         />
-      </KeyboardAvoidingView>
+        <KeyboardSpacer />
+      </View>
     );
   }
 }

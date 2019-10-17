@@ -110,7 +110,7 @@ export const facebookLogin = () => {
 export const signup = () => {
   return async (dispatch, getState) => {
     const {
-      user: { email, password, username, bio }
+      user: { email, password, username, bio, photo }
     } = getState();
     try {
       const { user } = await initialize
@@ -122,7 +122,7 @@ export const signup = () => {
           email,
           username,
           bio,
-          photo: "",
+          photo,
           token: null,
           uid: user.uid
         };

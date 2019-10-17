@@ -70,6 +70,7 @@ export const styles = StyleSheet.create({
     fontSize: 16
   },
   center: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "space-between"
   },
@@ -80,9 +81,6 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: "#fff",
     marginBottom: 50
-  },
-  bold: {
-    fontWeight: "bold"
   },
   left: {
     alignItems: "flex-start"
@@ -99,5 +97,17 @@ export const styles = StyleSheet.create({
   },
   space: {
     justifyContent: "space-between"
+  },
+  bold: {
+    fontWeight: "bold"
+  },
+  white: {
+    color: "#fff"
+  },
+  gray: {
+    color: "#adadad"
+  },
+  small: {
+    fontSize: 10
   }
 });

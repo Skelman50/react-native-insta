@@ -81,7 +81,9 @@ HomeNavigator.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.routes.some(route => route.routeName === "Camera")) {
     tabBarVisible = false;
-    StatusBar.setHidden = false;
+  }
+  if (navigation.state.routes.some(route => route.routeName === "Comment")) {
+    tabBarVisible = false;
   }
   return {
     tabBarVisible
@@ -93,8 +95,7 @@ export const SearchNavigator = createAppContainer(
     Search: {
       screen: Search,
       navigationOptions: {
-        title: "Search",
-        headerTitleStyle
+        header: null
       }
     }
   })

@@ -2,7 +2,6 @@ import { initialize, db } from "../config/config";
 import firebase from "firebase";
 import uuid from "uuid";
 import orderBy from "lodash/orderBy";
-import cloneDeep from 'lodash/cloneDeep'
 
 export const updateDescription = payload => {
   return {
@@ -11,13 +10,15 @@ export const updateDescription = payload => {
   };
 };
 
-export const getPosts = () => {
+export const getPosts = (isLoading = null) => {
   return async dispatch => {
     try {
+      isLoading && isLoading(true);
       const data = [];
       const posts = await db.collection("posts").get();
       posts.forEach(post => data.push(post.data()));
       dispatch({ type: "GET_POSTS", payload: data });
+      isLoading && isLoading(false);
     } catch (error) {
       alert(error);
       return;
@@ -59,7 +60,7 @@ export const uploadPost = () => {
   };
 };
 
-export const likePost = post => {
+export const likePost = (post) => {
   return (dispatch, getState) => {
     const { uid, photo, username } = getState().user;
     try {
@@ -87,7 +88,7 @@ export const likePost = post => {
   };
 };
 
-export const unlikePost = post => {
+export const unlikePost = (post) => {
   return async (dispatch, getState) => {
     const { uid } = getState().user;
     try {
@@ -123,16 +124,15 @@ export const getComments = post => {
 export const addComment = (text, post) => {
   return (dispatch, getState) => {
     const { uid, photo, username } = getState().user;
-    let comments = cloneDeep(getState().post.comments.reverse());
+    let comments = [...getState().post.comments].reverse();
     try {
       const comment = {
         comment: text,
         commenterId: uid,
-        commenterPhoto: photo || "",
+        commenterPhoto: photo || null,
         commenterName: username,
         date: new Date().getTime()
       };
-      console.log(comment);
       db.collection("posts")
         .doc(post.id)
         .update({

@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import {
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Image
+  Image,
+  ScrollView,
+  View
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
@@ -27,7 +29,7 @@ class Signup extends Component {
     const { routeName } = this.props.navigation.state;
     if (routeName === "Signup") {
       this.props.signup();
-      this.props.navigation.navigate("Home");
+      this.props.navigation.navigate("Login");
     } else {
       this.props.updateUser();
       this.props.navigation.goBack();
@@ -59,45 +61,54 @@ class Signup extends Component {
     } = this.props;
     const { routeName } = this.props.navigation.state;
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <TouchableOpacity style={styles.center} onPress={this.openLibrary}>
-          <Image style={styles.roundImage} source={{ uri: photo }} />
-          <Text>Upload Photo</Text>
-        </TouchableOpacity>
-        <TextInput
-          value={email}
-          onChangeText={input => updateEmail(input)}
-          placeholder="Email"
-          style={styles.border}
-          editable={routeName === "Signup" ? true : false}
-        />
-        <TextInput
-          textContentType="password"
-          value={password}
-          onChangeText={input => updatePassword(input)}
-          placeholder="Password"
-          style={styles.border}
-          secureTextEntry={true}
-          editable={routeName === "Signup" ? true : false}
-        />
-        <TextInput
-          value={username}
-          onChangeText={input => updateUsername(input)}
-          placeholder="Username"
-          style={styles.border}
-          editable={routeName === "Signup" ? true : false}
-        />
-        <TextInput
-          value={bio}
-          onChangeText={input => updateBio(input)}
-          placeholder="Bio"
-          style={styles.border}
-          editable={routeName === "Signup" ? true : false}
-        />
-        <TouchableOpacity style={styles.button} onPress={this.onPress}>
-          <Text>Done</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      <View style={styles.container}>
+        <ScrollView
+          style={{ width: "100%" }}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <TouchableOpacity style={styles.center} onPress={this.openLibrary}>
+            <Image style={styles.roundImage} source={{ uri: photo }} />
+            <Text>Upload Photo</Text>
+          </TouchableOpacity>
+          <TextInput
+            value={email}
+            onChangeText={input => updateEmail(input)}
+            placeholder="Email"
+            style={styles.border}
+            editable={routeName === "Signup" ? true : false}
+          />
+          <TextInput
+            textContentType="password"
+            value={password}
+            onChangeText={input => updatePassword(input)}
+            placeholder="Password"
+            style={styles.border}
+            secureTextEntry={true}
+            editable={routeName === "Signup" ? true : false}
+          />
+          <TextInput
+            value={username}
+            onChangeText={input => updateUsername(input)}
+            placeholder="Username"
+            style={styles.border}
+            editable={routeName === "Signup" ? true : false}
+          />
+          <TextInput
+            value={bio}
+            onChangeText={input => updateBio(input)}
+            placeholder="Bio"
+            style={styles.border}
+            editable={routeName === "Signup" ? true : false}
+          />
+          <TouchableOpacity style={styles.button} onPress={this.onPress}>
+            <Text>Done</Text>
+          </TouchableOpacity>
+        </ScrollView>
+        <KeyboardSpacer />
+      </View>
     );
   }
 }

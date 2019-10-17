@@ -1,15 +1,38 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import moment from "moment";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator
+} from "react-native";
 import { styles } from "../styles";
 import { getPosts, unlikePost, likePost } from "../actions/post";
 import { Ionicons, Feather, SimpleLineIcons } from "@expo/vector-icons";
 
 class Home extends Component {
+  state = {
+    isLoading: false
+  };
   componentDidMount = () => {
-    const { getPosts } = this.props;
-    getPosts();
+    this._navListener = this.props.navigation.addListener("didFocus", () => {
+      const { getPosts } = this.props;
+      getPosts(this.isloading);
+    });
+  };
+
+  isloading = loading => {
+    this.setState({
+      isloading: loading
+    });
+  };
+
+  componentWillUnmount = () => {
+    this._navListener.remove();
   };
 
   navigateMap = item => {
@@ -30,29 +53,37 @@ class Home extends Component {
       post: { feed },
       user: { uid }
     } = this.props;
+    if (this.state.isloading) {
+      return <ActivityIndicator style={styles.container} />;
+    }
     return (
-      <View style={styles.container}>
+      <View style={styles.containerComments}>
         <FlatList
           data={feed}
+          refreshing={false}
+          onRefresh={() => this.props.getPosts()}
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
-            const licked = item.likes.includes(uid);
+            const liked = item.likes.includes(uid);
             return (
               <View>
-                <View style={[styles.row, styles.center]}>
-                  <Image
-                    source={{ uri: item.photo }}
-                    style={styles.roundImage}
-                  />
-                  <Text>{item.username}</Text>
-                  <TouchableOpacity onPress={() => this.navigateMap(item)}>
-                    <Text>{item.place ? item.place : null}</Text>
-                  </TouchableOpacity>
-                  <Ionicons
-                    name="ios-flag"
-                    size={25}
-                    style={{ marginRight: 10 }}
-                  />
+                <View style={[styles.row, styles.space]}>
+                  <View style={[styles.row, styles.center]}>
+                    <Image
+                      style={styles.roundImage}
+                      source={{ uri: item.photo }}
+                    />
+                    <View style={[styles.containerComments, styles.left]}>
+                      <Text style={styles.bold}>{item.username}</Text>
+                      <Text style={[styles.gray, styles.small]}>
+                        {moment(item.date).format("ll")}
+                      </Text>
+                      <TouchableOpacity onPress={() => this.navigateMap(item)}>
+                        <Text>{item.place && item.place}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <Ionicons style={{ margin: 5 }} name="ios-flag" size={25} />
                 </View>
                 <TouchableOpacity onPress={() => this.likePost(item)}>
                   <Image
@@ -62,23 +93,25 @@ class Home extends Component {
                 </TouchableOpacity>
                 <View style={styles.row}>
                   <Ionicons
-                    color={licked ? "red" : "#000"}
-                    name={licked ? "ios-heart" : "ios-heart-empty"}
+                    style={{ margin: 5 }}
+                    color={liked ? "#db565b" : "#000"}
+                    name={liked ? "ios-heart" : "ios-heart-empty"}
                     size={25}
-                    style={{ marginLeft: 10, marginRight: 10 }}
                   />
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("Comment", item)}
+                    onPress={() =>
+                      this.props.navigation.navigate("Comment", item)
+                    }
                   >
                     <SimpleLineIcons
-                      name="bubble"
+                      style={{ margin: 5 }}
+                      name="bubbles"
                       size={25}
-                      style={{ marginRight: 10 }}
                     />
                   </TouchableOpacity>
-                  <Feather name="send" size={25} style={{ marginRight: 10 }} />
+                  <Feather style={{ margin: 5 }} name="send" size={25} />
                 </View>
-                <Text style={{ marginLeft: 10 }}>{item.postDescription}</Text>
+                <Text>{item.postDescription}</Text>
               </View>
             );
           }}
