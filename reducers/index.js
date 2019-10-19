@@ -45,10 +45,20 @@ const profile = (state = {}, action) => {
   }
 };
 
+const messages = (state = null, action) => {
+  switch (action.type) {
+    case 'GET_MESSAGES':
+      return action.payload
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   user,
   post,
-  profile
+  profile,
+  messages
 });
 
 export default rootReducer;

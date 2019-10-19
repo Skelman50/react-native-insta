@@ -13,6 +13,7 @@ import {
 import { styles } from "../styles";
 import { getPosts, unlikePost, likePost } from "../actions/post";
 import { Ionicons, Feather, SimpleLineIcons } from "@expo/vector-icons";
+import { getUser } from "../actions/user";
 
 class Home extends Component {
   state = {
@@ -48,6 +49,11 @@ class Home extends Component {
     }
   };
 
+  goToProfile = item => async () => {
+    await this.props.getUser(item.uid);
+    this.props.navigation.navigate("Profile");
+  };
+
   render() {
     const {
       post: { feed },
@@ -69,10 +75,12 @@ class Home extends Component {
               <View>
                 <View style={[styles.row, styles.space]}>
                   <View style={[styles.row, styles.center]}>
-                    <Image
-                      style={styles.roundImage}
-                      source={{ uri: item.photo }}
-                    />
+                    <TouchableOpacity onPress={this.goToProfile(item)}>
+                      <Image
+                        style={styles.roundImage}
+                        source={{ uri: item.photo }}
+                      />
+                    </TouchableOpacity>
                     <View style={[styles.containerComments, styles.left]}>
                       <Text style={styles.bold}>{item.username}</Text>
                       <Text style={[styles.gray, styles.small]}>
@@ -126,7 +134,10 @@ const mapStateToProps = ({ post, user }) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getPosts, unlikePost, likePost }, dispatch);
+  return bindActionCreators(
+    { getPosts, unlikePost, likePost, getUser },
+    dispatch
+  );
 };
 
 export default connect(

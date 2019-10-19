@@ -1,16 +1,11 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  SafeAreaView,
-  FlatList,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity
-} from "react-native";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { TextInput, SafeAreaView, ActivityIndicator } from "react-native";
 import { styles } from "../styles";
 import { db } from "../config/config";
+import { getUser } from "../actions/user";
+import UserInfo from "../components/UserInfo";
 
 class Search extends Component {
   state = {
@@ -32,10 +27,6 @@ class Search extends Component {
     this.setState({ searchList, isloading: false });
   };
 
-  goToProfile = item => () => {
-    console.log(item.uid);
-  };
-
   render() {
     return (
       <SafeAreaView style={[styles.containerComments, { marginTop: 20 }]}>
@@ -50,21 +41,10 @@ class Search extends Component {
         {this.state.isloading ? (
           <ActivityIndicator style={styles.container} />
         ) : (
-          <FlatList
-            data={this.state.searchList}
-            keyExtractor={item => JSON.stringify(item.uid)}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[styles.row, styles.space]}
-                onPress={this.goToProfile(item)}
-              >
-                <Image style={styles.roundImage} source={{ uri: item.photo }} />
-                <View style={[styles.containerComments, styles.left]}>
-                  <Text style={styles.bold}>{item.username}</Text>
-                  <Text style={styles.gray}>{item.bio}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
+          <UserInfo
+            item={this.state.searchList}
+            isSearch={true}
+            {...this.props}
           />
         )}
       </SafeAreaView>
@@ -72,4 +52,17 @@ class Search extends Component {
   }
 }
 
-export default Search;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getUser }, dispatch);
+};
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Search);

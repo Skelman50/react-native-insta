@@ -1,6 +1,7 @@
 import { initialize, db } from "../config/config";
 import * as Facebook from "expo-facebook";
 import firebase from "firebase";
+import orderBy from "lodash/orderBy";
 
 export const updateEmail = payload => {
   return {
@@ -50,14 +51,26 @@ export const login = () => {
   };
 };
 
-export const getUser = uid => {
+export const getUser = (uid, type) => {
   return async dispatch => {
     try {
-      const user = await db
+      const userResponse = await db
         .collection("users")
         .doc(uid)
         .get();
-      dispatch({ type: "LOGIN", payload: user.data() });
+      const user = userResponse.data();
+      const posts = [];
+      const postsResponse = await db
+        .collection("posts")
+        .where("uid", "==", uid)
+        .get();
+      postsResponse.forEach(p => posts.push(p.data()));
+      user.posts = orderBy(posts, "date", "desc");
+      if (type === "LOGIN") {
+        dispatch({ type: "LOGIN", payload: user });
+      } else {
+        dispatch({ type: "GET_PROFILE", payload: user });
+      }
     } catch (error) {
       alert(error);
       return;

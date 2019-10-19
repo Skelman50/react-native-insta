@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import moment from "moment";
 import { bindActionCreators } from "redux";
 import KeyboardSpacer from "react-native-keyboard-spacer";
-import { Text, View, TextInput, FlatList, Image } from "react-native";
+import { View, TextInput } from "react-native";
 import { addComment, getComments } from "../actions/post";
 import { styles } from "../styles";
+import UserInfo from "../components/UserInfo";
+import { getUser } from "../actions/user";
 
 class Comment extends React.Component {
   state = {
@@ -32,30 +33,10 @@ class Comment extends React.Component {
   render() {
     return (
       <View style={styles.containerComments}>
-        <FlatList
-          keyExtractor={item => JSON.stringify(item.date)}
-          data={this.props.post.comments}
-          renderItem={({ item }) => {
-            return (
-              <View style={[styles.row, styles.space]}>
-                <Image
-                  style={styles.roundImage}
-                  source={{
-                    uri: item.commenterPhoto
-                      ? item.commenterPhoto
-                      : "https://wingslax.com/wp-content/uploads/2017/12/no-image-available.png"
-                  }}
-                />
-                <View style={[styles.containerComments, styles.left]}>
-                  <Text style={styles.bold}>{item.commenterName}</Text>
-                  <Text style={styles.gray}>{item.comment}</Text>
-                  <Text style={[styles.gray, styles.small]}>
-                    {moment(item.date).format("ll")}
-                  </Text>
-                </View>
-              </View>
-            );
-          }}
+        <UserInfo
+          isComment={true}
+          item={this.props.post.comments}
+          {...this.props}
         />
         <TextInput
           style={styles.input}
@@ -72,7 +53,7 @@ class Comment extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ addComment, getComments }, dispatch);
+  return bindActionCreators({ addComment, getComments, getUser }, dispatch);
 };
 
 const mapStateToProps = state => {

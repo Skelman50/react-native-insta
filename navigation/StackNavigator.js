@@ -15,6 +15,17 @@ import Comment from "../screens/Comment";
 import HeaderTitleText from "./helpers/HeaderTitle";
 import HeaderLeftBack from "./helpers/HraderLeftBack";
 import { headerTitleStyle } from "./helpers/headerTitleStyle";
+import Chat from "../screens/Chat";
+import Messages from "../screens/Messages";
+
+const ProfileNav = {
+  screen: Profile,
+  navigationOptions: ({ navigation }) => ({
+    headerTitle: <HeaderTitleText text={"Profile"} />,
+    headerLeft: <HeaderLeftBack navigation={navigation} />,
+    headerRight: <View />
+  })
+};
 
 const headerTitle = (
   <View style={styles.containerTitle}>
@@ -34,8 +45,8 @@ const headerLeft = navigation => (
   </TouchableOpacity>
 );
 
-const headerRight = (
-  <TouchableOpacity>
+const headerRight = navigation => (
+  <TouchableOpacity onPress={() => navigation.navigate("Messages")}>
     <Ionicons style={{ marginRight: 10 }} name="ios-send" size={30} />
   </TouchableOpacity>
 );
@@ -43,7 +54,7 @@ const headerRight = (
 const navigationOptions = navigation => ({
   headerTitle,
   headerLeft: headerLeft(navigation),
-  headerRight
+  headerRight: headerRight(navigation)
 });
 
 export const HomeNavigator = createAppContainer(
@@ -66,6 +77,23 @@ export const HomeNavigator = createAppContainer(
         headerRight: <View />
       })
     },
+    Chat: {
+      screen: Chat,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: <HeaderTitleText text={"Chat"} />,
+        headerLeft: <HeaderLeftBack navigation={navigation} />,
+        headerRight: <View />
+      })
+    },
+    Messages: {
+      screen: Messages,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: <HeaderTitleText text={"Messages"} />,
+        headerLeft: <HeaderLeftBack navigation={navigation} />,
+        headerRight: <View />
+      })
+    },
+    Profile: ProfileNav,
     Comment: {
       screen: Comment,
       navigationOptions: ({ navigation }) => ({
@@ -97,7 +125,8 @@ export const SearchNavigator = createAppContainer(
       navigationOptions: {
         header: null
       }
-    }
+    },
+    Profile: ProfileNav
   })
 );
 
@@ -121,16 +150,17 @@ export const ActivityNavigator = createAppContainer(
         title: "Activity",
         headerTitleStyle
       }
-    }
+    },
+    Profile: ProfileNav
   })
 );
 
 export const ProfileNavigator = createAppContainer(
   createStackNavigator({
-    Profile: {
+    MyProfile: {
       screen: Profile,
       navigationOptions: {
-        title: "Profile",
+        title: "My Profile",
         headerTitleStyle
       }
     },

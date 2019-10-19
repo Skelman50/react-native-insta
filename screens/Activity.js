@@ -1,9 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import moment from "moment";
-import { Text, View, FlatList, ActivityIndicator, Image } from "react-native";
+import {
+  Text,
+  View,
+  FlatList,
+  ActivityIndicator,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import { styles } from "../styles";
 import { db } from "../config/config";
+import { getUser } from "../actions/user";
 
 class Activity extends Component {
   state = {
@@ -34,11 +43,24 @@ class Activity extends Component {
     this.setState({ activity, isloading: false });
   };
 
+  goToProfile = ({ item, isComment = false, isLike = false }) => async () => {
+    if (isLike) {
+      await this.props.getUser(item.likerId);
+    }
+    if (isComment) {
+      await this.props.getUser(item.commenterId);
+    }
+    this.props.navigation.navigate("Profile");
+  };
+
   renderList = item => {
     switch (item.type) {
       case "LIKE":
         return (
-          <View style={[styles.row, styles.space]}>
+          <TouchableOpacity
+            style={[styles.row, styles.space]}
+            onPress={this.goToProfile({ item, isLike: true })}
+          >
             <Image
               style={styles.roundImage}
               source={{ uri: item.likerPhoto }}
@@ -51,11 +73,14 @@ class Activity extends Component {
               </Text>
             </View>
             <Image style={styles.roundImage} source={{ uri: item.postPhoto }} />
-          </View>
+          </TouchableOpacity>
         );
       case "COMMENT":
         return (
-          <View style={[styles.row, styles.space]}>
+          <TouchableOpacity
+            style={[styles.row, styles.space]}
+            onPress={this.goToProfile({ item, isComment: true })}
+          >
             <Image
               style={styles.roundImage}
               source={{ uri: item.commenterPhoto }}
@@ -68,7 +93,7 @@ class Activity extends Component {
               </Text>
             </View>
             <Image style={styles.roundImage} source={{ uri: item.postPhoto }} />
-          </View>
+          </TouchableOpacity>
         );
       default:
         null;
@@ -93,8 +118,15 @@ class Activity extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getUser }, dispatch);
+};
+
 const mapStateToProps = ({ user }) => {
   return { user };
 };
 
-export default connect(mapStateToProps)(Activity);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Activity);

@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    margin: 5
+    margin: 10
   },
   row: {
     flexDirection: "row"
@@ -70,9 +70,8 @@ export const styles = StyleSheet.create({
     fontSize: 16
   },
   center: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "center"
   },
   cameraButton: {
     height: 100,
@@ -96,6 +95,7 @@ export const styles = StyleSheet.create({
     width: 125
   },
   space: {
+    alignItems: "center",
     justifyContent: "space-between"
   },
   bold: {
@@ -109,5 +109,14 @@ export const styles = StyleSheet.create({
   },
   small: {
     fontSize: 10
+  },
+  squareLarge: {
+    width: width * 0.33,
+    height: 125,
+    margin: 1,
+    backgroundColor: "#d3d3d3"
+  },
+  right: {
+    alignItems: "flex-end"
   }
 });

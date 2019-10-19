@@ -25,7 +25,7 @@ class Login extends Component {
         getUser
       } = this.props;
       if (user) {
-        getUser(user.uid);
+        getUser(user.uid, "LOGIN");
         if (this.props.user) {
           navigate("Home");
         }

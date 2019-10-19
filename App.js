@@ -6,6 +6,7 @@ import reducer from "./reducers";
 import SwitchNavigator from "./navigation/SwitchNavigator";
 import GeneralStatusBar from "./screens/GeneralStatusBar";
 import { YellowBox } from "react-native";
+import "./fixingTimeBug"
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 console.ignoredYellowBox = ["Setting a timer"];
