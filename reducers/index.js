@@ -14,6 +14,8 @@ const user = (state = {}, { payload, type }) => {
       return { ...state, photo: payload };
     case "LOGIN":
       return payload;
+    case "GET_TOKEN":
+      return { ...state, token: payload };
     default:
       return state;
   }
@@ -47,12 +49,12 @@ const profile = (state = {}, action) => {
 
 const messages = (state = null, action) => {
   switch (action.type) {
-    case 'GET_MESSAGES':
-      return action.payload
+    case "GET_MESSAGES":
+      return action.payload;
     default:
-      return state
+      return state;
   }
-}
+};
 
 const rootReducer = combineReducers({
   user,

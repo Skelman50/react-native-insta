@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { styles } from "../styles";
 import { initialize } from "../config/config";
-import { getUser } from "../actions/user";
+import { getUser, followUser, unfollowUser } from "../actions/user";
 
 class Profile extends Component {
   state = {
@@ -42,6 +42,13 @@ class Profile extends Component {
   };
   componentWillUnmount = () => {
     this._navListener.remove();
+  };
+  follow = user => {
+    if (user.followers.indexOf(this.props.user.uid) >= 0) {
+      this.props.unfollowUser(user);
+    } else {
+      this.props.followUser(user);
+    }
   };
   render() {
     let user = {};
@@ -96,7 +103,7 @@ class Profile extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonSmall}
-                onPress={() => firebase.auth().signOut()}
+                onPress={this.logout}
               >
                 <Text style={styles.bold}>Logout</Text>
               </TouchableOpacity>
@@ -148,7 +155,7 @@ const mapStateToProps = ({ user, profile }) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getUser }, dispatch);
+  return bindActionCreators({ getUser, followUser, unfollowUser }, dispatch);
 };
 
 export default connect(

@@ -2,6 +2,7 @@ import { initialize, db } from "../config/config";
 import * as Facebook from "expo-facebook";
 import firebase from "firebase";
 import orderBy from "lodash/orderBy";
+import { allowNotifications, sendNotification } from "./notification";
 
 export const updateEmail = payload => {
   return {
@@ -44,6 +45,7 @@ export const login = () => {
         .auth()
         .signInWithEmailAndPassword(email, password);
       dispatch(getUser(user.uid));
+      dispatch(allowNotifications());
     } catch (error) {
       alert(error);
       return;
@@ -93,7 +95,6 @@ export const facebookLogin = () => {
           .collection("users")
           .doc(response.user.uid)
           .get();
-        console.log(user.exists);
         if (!user.exists) {
           const dbUser = {
             email: response.user.email,
@@ -107,6 +108,7 @@ export const facebookLogin = () => {
             .collection("users")
             .doc(response.user.uid)
             .set(dbUser);
+          dispatch(allowNotifications());
           dispatch({ type: "LOGIN", payload: dbUser });
         } else {
           dispatch(getUser(response.user.uid));
@@ -165,6 +167,63 @@ export const updateUser = () => {
         });
     } catch (e) {
       alert(e);
+    }
+  };
+};
+
+export const followUser = user => {
+  return async (dispatch, getState) => {
+    const { uid, photo, username } = getState().user;
+    console.log(user);
+    console.log(getState().user);
+    try {
+      db.collection("users")
+        .doc(user.uid)
+        .update({
+          followers: firebase.firestore.FieldValue.arrayUnion(uid)
+        });
+      db.collection("users")
+        .doc(uid)
+        .update({
+          following: firebase.firestore.FieldValue.arrayUnion(user.uid)
+        });
+      db.collection("activity")
+        .doc()
+        .set({
+          followerId: uid,
+          followerPhoto: photo,
+          followerName: username,
+          uid: user.uid,
+          photo: user.photo,
+          username: user.username,
+          date: new Date().getTime(),
+          type: "FOLLOWER"
+        });
+      dispatch(sendNotification(user.uid, "Started Following You"));
+      dispatch(getUser(user.uid));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
+
+export const unfollowUser = user => {
+  return async (dispatch, getState) => {
+    const { uid, photo, username } = getState().user;
+    try {
+      db.collection("users")
+        .doc(user.uid)
+        .update({
+          followers: firebase.firestore.FieldValue.arrayRemove(uid)
+        });
+      db.collection("users")
+        .doc(uid)
+        .update({
+          following: firebase.firestore.FieldValue.arrayRemove(user.uid)
+        });
+      dispatch(getUser(user.uid));
+    } catch (e) {
+      console.error(e);
     }
   };
 };

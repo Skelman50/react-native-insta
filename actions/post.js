@@ -2,6 +2,7 @@ import { initialize, db } from "../config/config";
 import firebase from "firebase";
 import uuid from "uuid";
 import orderBy from "lodash/orderBy";
+import { sendNotification } from "./notification";
 
 export const updateDescription = payload => {
   return {
@@ -60,7 +61,7 @@ export const uploadPost = () => {
   };
 };
 
-export const likePost = (post) => {
+export const likePost = post => {
   return (dispatch, getState) => {
     const { uid, photo, username } = getState().user;
     try {
@@ -81,6 +82,7 @@ export const likePost = (post) => {
           date: new Date().getTime(),
           type: "LIKE"
         });
+      dispatch(sendNotification(post.uid, "Liked Your Photo"));
       dispatch(getPosts());
     } catch (e) {
       console.error(e);
@@ -88,7 +90,7 @@ export const likePost = (post) => {
   };
 };
 
-export const unlikePost = (post) => {
+export const unlikePost = post => {
   return async (dispatch, getState) => {
     const { uid } = getState().user;
     try {
@@ -144,7 +146,7 @@ export const addComment = (text, post) => {
       comment.type = "COMMENT";
       comments.push(comment);
       dispatch({ type: "GET_COMMENTS", payload: comments.reverse() });
-
+      dispatch(sendNotification(post.uid, text));
       db.collection("activity")
         .doc()
         .set(comment);

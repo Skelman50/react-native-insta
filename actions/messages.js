@@ -1,5 +1,6 @@
 import { db } from "../config/config";
 import { orderBy } from "lodash";
+import { sendNotification } from "./notification";
 
 export const addMessage = (id, text) => {
   return async (dispatch, getState) => {
@@ -18,6 +19,7 @@ export const addMessage = (id, text) => {
         .doc()
         .set(message);
       dispatch(getMessages());
+      dispatch(sendNotification(id, text));
     } catch (e) {
       console.error(e);
     }
